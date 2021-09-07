@@ -17,7 +17,7 @@ def call(Map pipelineParams) {
       stages {
         stage('Cloning Git') {
           steps {
-            git branch: pipelineParams.branch, url: pipelineParams.git, credentialsId: pipelineParams.gitCredential
+            git credentialsId: pipelineParams.gitCredential, branch: pipelineParams.branch, url: pipelineParams.git
           }
         }
         stage('Building image') {
