@@ -30,8 +30,8 @@ def call(Map pipelineParams) {
         stage('Deploy Image') {
           steps{
             script {
-              docker.with
-                ( '', registryCredential ) {
+              docker.withRegistry
+                ( registry, registryCredential ) {
                 dockerImage.push()
               }
             }
