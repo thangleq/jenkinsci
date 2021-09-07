@@ -26,7 +26,7 @@ def call(Map pipelineParams) {
         stage('Building image') {
           steps{
             script {
-                dockerImage = docker.build registry + ":${GIT_COMMIT}-" + gitCommit.GIT_COMMIT
+                dockerImage = docker.build registry + ":" + gitCommit.GIT_COMMIT
             }
           }
         }
