@@ -17,7 +17,7 @@ def call(Map pipelineParams) {
       stages {
         stage('Cloning Git') {
           steps {
-            git branch: pipelineParams.branch, url: pipelineParams.git
+            git branch: pipelineParams.branch, url: pipelineParams.git, credentialsId: pipelineParams.gitCredential
           }
         }
         stage('Building image') {
@@ -30,7 +30,8 @@ def call(Map pipelineParams) {
         stage('Deploy Image') {
           steps{
             script {
-              docker.withRegistry( '', registryCredential ) {
+              docker.with
+                ( '', registryCredential ) {
                 dockerImage.push()
               }
             }
