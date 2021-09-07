@@ -7,6 +7,7 @@ def call(Map pipelineParams) {
     def serviceName = pipelineParams.serviceName
     def helmReleaseNote = 'release-notes'
     def releaseNotes = pipelineParams.withReleaseNotes
+    def gitCommit = ''
 
     echo pipelineParams.helmRepo
     echo helmRepo
@@ -17,13 +18,14 @@ def call(Map pipelineParams) {
       stages {
         stage('Cloning Git') {
           steps {
-            git credentialsId: pipelineParams.gitCredential, branch: pipelineParams.branch, url: pipelineParams.git
+            gitCommit = git credentialsId: pipelineParams.gitCredential, branch: pipelineParams.branch, url: pipelineParams.git
+              
           }
         }
         stage('Building image') {
           steps{
             script {
-                dockerImage = docker.build registry + ":${GIT_COMMIT}-${BUILD_NUMBER}"
+                dockerImage = docker.build registry + ":${GIT_COMMIT}-" + gitCommit.GIT_COMMIT
             }
           }
         }
