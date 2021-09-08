@@ -42,7 +42,7 @@ def call(Map pipelineParams) {
         }
         
         stage( "Deploy ArgoCD" ) {
-          agent { docker 'argoproj/argocd-cli' }
+          agent { docker 'argoproj/argocd-cli:v0.10.6' }
           steps{
             script {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
