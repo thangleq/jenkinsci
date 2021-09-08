@@ -46,9 +46,9 @@ def call(Map pipelineParams) {
           steps{
             script {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
-                    sh "/argocd app set ${APP_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
-                    sh "/argocd app sync ${APP_NAME}"
-                    sh "/argocd app wait ${APP_NAME} --timeout 600"
+                    sh "/argocd app set ${JOB_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
+                    sh "/argocd app sync ${JOB_NAME}"
+                    sh "/argocd app wait ${JOB_NAME} --timeout 600"
                 }
               
             }
