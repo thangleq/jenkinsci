@@ -9,14 +9,14 @@ def call(Map pipelineParams) {
         stage('Cloning Git') {
           steps {
             script {
-                gitCommit = git credentialsId: pipelineParams.gitCredential, branch: pipelineParams.branch, url: pipelineParams.git
+                git credentialsId: pipelineParams.gitCredential, branch: pipelineParams.branch, url: pipelineParams.git
             }
           }
         }
         stage('Building Image') {
           steps{
             script {
-                dockerImage = docker.build registry + ":"+ gitCommit.GIT_COMMIT.take(7)+"-${BUILD_NUMBER}"
+                dockerImage = docker.build registry + ":"+ env.GIT_COMMIT.take(7)+"-${BUILD_NUMBER}"
             }
           }
         }
@@ -64,7 +64,7 @@ def call(Map pipelineParams) {
 
         stage('Remove Unused docker image') {
           steps{
-            sh "docker rmi ${registry}:${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
+            sh "docker rmi ${registry}:${env.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
           }
         }
       }
