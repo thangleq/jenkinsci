@@ -49,15 +49,15 @@ def call(Map pipelineParams) {
           }
         }
         
-        stage( "Deploy ArgoCD" ) 
-            container('argo-cd-cli') {
-                withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
+//         stage( "Deploy ArgoCD" ) 
+//             container('argo-cd-cli') {
+//                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
 //                     sh "/argocd app set ${APP_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
-                    sh "/argocd app sync ${APP_NAME}"
-                    sh "/argocd app wait ${APP_NAME} --timeout 600"
-                }
-            }
-        }  
+//                     sh "/argocd app sync ${APP_NAME}"
+//                     sh "/argocd app wait ${APP_NAME} --timeout 600"
+//                 }
+//             }
+//         }  
 //         stage('Check Release Notes condition') {
 //           steps{
 //             script {
