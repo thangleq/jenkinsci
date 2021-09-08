@@ -42,13 +42,13 @@ def call(Map pipelineParams) {
         }
         
         stage( "Deploy ArgoCD" ) {
-          agent { docker 'argoproj/argocd-cli:v0.10.6' }
+          agent { docker 'argoproj/argocli' }
           steps{
             script {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
-                    sh "/argocd --grpc-web --server=${pipelineParams.argocd} app set ${JOB_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
-                    sh "/argocd --grpc-web --server=${pipelineParams.argocd} app sync ${JOB_NAME}"
-                    sh "/argocd --grpc-web --server=${pipelineParams.argocd} app wait ${JOB_NAME} --timeout 600"
+                    sh "argocd --grpc-web --server=${pipelineParams.argocd} app set ${JOB_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
+                    sh "argocd --grpc-web --server=${pipelineParams.argocd} app sync ${JOB_NAME}"
+                    sh "argocd --grpc-web --server=${pipelineParams.argocd} app wait ${JOB_NAME} --timeout 600"
                 }
               
             }
