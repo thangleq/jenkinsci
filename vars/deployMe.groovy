@@ -37,7 +37,7 @@ def call(Map pipelineParams) {
           steps{
             script {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
-                    sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app set ${JOB_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
+                    sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app set ${JOB_NAME} -p image.tag=${env.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
                     sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app sync ${JOB_NAME}"
                     sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app wait ${JOB_NAME} --timeout 600"
                 }
@@ -53,7 +53,7 @@ def call(Map pipelineParams) {
           steps{
             script {
                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
-                    sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app set ${JOB_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
+                    sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app set ${JOB_NAME} -p image.tag=${env.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
                     sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app sync ${JOB_NAME}"
                     sh "argocd --insecure --grpc-web --server=${pipelineParams.argocd} app wait ${JOB_NAME} --timeout 600"
                 }
