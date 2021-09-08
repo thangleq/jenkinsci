@@ -14,14 +14,6 @@ def call(Map pipelineParams) {
     echo pipelineParams.serviceName
     echo serviceName
     
-    podTemplate(name: 'finex-argocd', label: 'finex-argocd', containers: [
-        containerTemplate(name: 'builder', image: 'golang:1.10.3', ttyEnabled: true, command: 'cat', args: ''),
-        containerTemplate(name: 'docker', image: 'docker:17.09', ttyEnabled: true, command: 'cat', args: '' ),
-        containerTemplate(name: 'argo-cd-tools', image: 'argoproj/argo-cd-tools:latest', ttyEnabled: true, command: 'cat', args: '', envVars:[envVar(key: 'GIT_SSH_COMMAND', value: 'ssh -o StrictHostKeyChecking=no')] ),
-        containerTemplate(name: 'argo-cd-cli', image: 'argoproj/argocd-cli:v0.7.1', ttyEnabled: true, command: 'cat', args: '', envVars:[envVar(key: 'ARGOCD_SERVER', value: pipelineParams.argocdServer)] ),
-        ]
-      )
-    
     pipeline {
       agent any
       stages {
@@ -49,15 +41,19 @@ def call(Map pipelineParams) {
           }
         }
         
-//         stage( "Deploy ArgoCD" ) 
-//             container('argo-cd-cli') {
-//                 withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
-//                     sh "/argocd app set ${APP_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
-//                     sh "/argocd app sync ${APP_NAME}"
-//                     sh "/argocd app wait ${APP_NAME} --timeout 600"
-//                 }
-//             }
-//         }  
+        stage( "Deploy ArgoCD" ) {
+          agent { docker 'argoproj/argocd-cli:latest' }
+          steps{
+            script {
+                withCredentials([string(credentialsId: "argocd-deploy-role", variable: 'ARGOCD_AUTH_TOKEN')]) {
+                    sh "/argocd app set ${APP_NAME} -p image.tag=${gitCommit.GIT_COMMIT.take(7)}-${BUILD_NUMBER}"
+                    sh "/argocd app sync ${APP_NAME}"
+                    sh "/argocd app wait ${APP_NAME} --timeout 600"
+                }
+              
+            }
+          } 
+        }  
 //         stage('Check Release Notes condition') {
 //           steps{
 //             script {
