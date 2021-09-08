@@ -14,7 +14,7 @@ def call(Map pipelineParams) {
     echo pipelineParams.serviceName
     echo serviceName
     
-    podTemplate(name: ptNameVersion, label: ptNameVersion, containers: [
+    podTemplate(name: 'finex-argocd', label: 'finex-argocd', containers: [
         containerTemplate(name: 'builder', image: 'golang:1.10.3', ttyEnabled: true, command: 'cat', args: ''),
         containerTemplate(name: 'docker', image: 'docker:17.09', ttyEnabled: true, command: 'cat', args: '' ),
         containerTemplate(name: 'argo-cd-tools', image: 'argoproj/argo-cd-tools:latest', ttyEnabled: true, command: 'cat', args: '', envVars:[envVar(key: 'GIT_SSH_COMMAND', value: 'ssh -o StrictHostKeyChecking=no')] ),
